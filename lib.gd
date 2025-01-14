@@ -70,14 +70,19 @@ func test_cash_register():
     print("current post-close: ", cash_return_current_cash())
     print("cash_return_shift_number() returns ", cash_return_shift_number())
     print("current pre-open: ", cash_return_current_cash())
+    print("cash_shift_is_closed() returns ", cash_shift_is_open())
     cash_open_shift(100)
     print("current post-open: ", cash_return_current_cash())
+    print("cash_shift_is_closed() returns ", cash_shift_is_open())
     print("current before +700: ", cash_return_current_cash())
     cash_add_payment(700,0,0,700,"ТЕСТ ОПЛАТЫ БЛЯДЬ")
     print("current after +700: ", cash_return_current_cash())
     print("curent before -700: ", cash_return_current_cash())
     cash_add_return(700,0,0,700,"ТЕСТ ВОЗВРАТА БЛЯДЬ")
     print("curent after -700: ", cash_return_current_cash())
+    print("cash_return_shift_number() before cash_set_shift_number(610) returns ", cash_return_shift_number())
+    cash_set_shift_number(610)
+    print("cash_return_shift_number() after cash_set_shift_number(610) returns ", cash_return_shift_number())
     print("cash_return_shift_number() returns ", cash_return_shift_number())
     print("cash_return_all_cash_money_actions_in_current_shift()\n",\
     cash_return_all_cash_money_actions_in_current_shift())
@@ -99,7 +104,16 @@ func test_cash_register():
 #region ALL -> FUNCS -> CASH
 
 
-func cash_return_shift_number():
+func cash_set_shift_number(num: int) -> void:
+    if cash_shift_is_open():
+        cash_register_shifts_array[-1]["shift_number"] = num
+
+
+func cash_shift_is_open() -> bool:
+    return typeof(cash_register_shifts_array[-1]["closed"]) == TYPE_BOOL
+
+
+func cash_return_shift_number() -> int:
     return cash_register_shifts_array[-1]["shift_number"]
 
 
