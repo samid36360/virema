@@ -57,19 +57,60 @@ var random_checker_scores: Array[float] = []
 #region ALL -> FUNCS
 
 
+#region ALL -> FUNCS -> TESTS
+
+
+func test_cash_register():
+    print("\n                           ---- cash debug ----")
+    cash_make_file(true)
+    cash_load(true)
+    cash_file_max_256()
+    print("current pre-close: ", cash_return_current_cash())
+    cash_close_shift()
+    print("current post-close: ", cash_return_current_cash())
+    print("current pre-open: ", cash_return_current_cash())
+    cash_open_shift(100)
+    print("current post-open: ", cash_return_current_cash())
+    print("current before +700: ", cash_return_current_cash())
+    cash_add_payment(700,0,0,700,"ТЕСТ ОПЛАТЫ БЛЯДЬ")
+    print("current after +700: ", cash_return_current_cash())
+    print("curent before -700: ", cash_return_current_cash())
+    cash_add_return(700,0,0,700,"ТЕСТ ВОЗВРАТА БЛЯДЬ")
+    print("curent after -700: ", cash_return_current_cash())
+    print("cash_return_all_cash_money_actions_in_current_shift()\n",\
+    cash_return_all_cash_money_actions_in_current_shift())
+    print("cash_return_all_money_actions_in_current_shift()\n",\
+    cash_return_all_money_actions_in_current_shift())
+    
+    print("last payment: ",\
+    cash_register_shifts_array[-1]["money_actions"][-1]["money_action"],\
+    "\ncommentary: ",\
+    cash_register_shifts_array[-1]["money_actions"][-1]["commentary"])
+    
+    cash_save(true)
+    print("                           ---- cash debug end ----\n")
+
+
+#endregion
+
+
 #region ALL -> FUNCS -> CASH
+
+
 func cash_return_all_money_actions_in_current_shift() -> Array:
     return cash_register_shifts_array[-1]["money_actions"]
 
 
 func cash_return_all_cash_money_actions_in_current_shift() -> Dictionary:
     var amounts: Array[int] = []
+    var datetimes: Array[Dictionary] = []
     var comments: Array[String] = []
     for a: Dictionary in cash_register_shifts_array[-1]["money_actions"]:
-        if a["money_action"]["cash"] > 0:
+        if a["money_action"]["cash"] != 0:
             amounts.append(a["money_action"]["cash"])
-            comments.append(a["comment"])
-    return {"amounts" : amounts, "comments" : comments}
+            datetimes.append(a["datetime"])
+            comments.append(a["commentary"])
+    return {"amounts" : amounts, "comments" : comments, "datetimes" : datetimes}
 
 
 func cash_add_return(cash: int = 0,\
@@ -196,6 +237,7 @@ func cash_make_file(testing: bool = false) -> void:
 #endregion
 
 
+#region ALL -> FUNCS -> ROOKIE
 func random_checker(new_value: float) -> float:
     random_checker_scores.append(new_value)
     return add_all_floats(random_checker_scores)/float(random_checker_scores.size())
@@ -551,6 +593,7 @@ func sub_hours(original_hour_dict, hours_to_sub):
     var return_hour_dict = Time.get_date_dict_from_unix_time(return_hour_unix)
     return return_hour_dict
 #endregion
+#endregion
 
 
 #region ALL -> _READY
@@ -568,28 +611,7 @@ func _ready():
     loading_done = true
     new_payment_history_key("ПРОГРАММА ЗАПУЩЕНА")
     
-    print("\n                                cash debug:")
-    cash_make_file()
-    cash_load()
-    cash_file_max_256()
-    print("current pre-close: ", cash_return_current_cash())
-    cash_close_shift()
-    print("current post-close: ", cash_return_current_cash())
-    print("current pre-open: ", cash_return_current_cash())
-    cash_open_shift(100)
-    print("current post-open: ", cash_return_current_cash())
-    print("current before +700: ", cash_return_current_cash())
-    cash_add_payment(700,0,0,700,"ТЕСТ ОПЛАТЫ БЛЯДЬ")
-    print("current after +700: ", cash_return_current_cash())
-    print("curent before -700: ", cash_return_current_cash())
-    cash_add_return(700,0,0,700,"ТЕСТ ВОЗВРАТА БЛЯДЬ")
-    print("curent after -700: ", cash_return_current_cash())
-    print("last payment: ",\
-    cash_register_shifts_array[-1]["money_actions"][-1]["money_action"],\
-    "\ncommentary: ",\
-    cash_register_shifts_array[-1]["money_actions"][-1]["commentary"])
-    cash_save()
-    print("                                cash debug end\n")
+    test_cash_register()
 #endregion
     
 
