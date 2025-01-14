@@ -68,6 +68,7 @@ func test_cash_register():
     print("current pre-close: ", cash_return_current_cash())
     cash_close_shift()
     print("current post-close: ", cash_return_current_cash())
+    print("cash_return_shift_number() returns ", cash_return_shift_number())
     print("current pre-open: ", cash_return_current_cash())
     cash_open_shift(100)
     print("current post-open: ", cash_return_current_cash())
@@ -77,6 +78,7 @@ func test_cash_register():
     print("curent before -700: ", cash_return_current_cash())
     cash_add_return(700,0,0,700,"ТЕСТ ВОЗВРАТА БЛЯДЬ")
     print("curent after -700: ", cash_return_current_cash())
+    print("cash_return_shift_number() returns ", cash_return_shift_number())
     print("cash_return_all_cash_money_actions_in_current_shift()\n",\
     cash_return_all_cash_money_actions_in_current_shift())
     print("cash_return_all_money_actions_in_current_shift()\n",\
@@ -95,6 +97,10 @@ func test_cash_register():
 
 
 #region ALL -> FUNCS -> CASH
+
+
+func cash_return_shift_number():
+    return cash_register_shifts_array[-1]["shift_number"]
 
 
 func cash_return_all_money_actions_in_current_shift() -> Array:
@@ -154,10 +160,13 @@ func cash_return_current_cash() -> int:
 
 func cash_open_shift(cash_on_open: int) -> void:
     if typeof(cash_register_shifts_array[-1]["closed"]) != TYPE_BOOL:
-        cash_register_shifts_array.append({"opened":Time.get_datetime_dict_from_system(),\
+        cash_register_shifts_array.append({\
+        "shift_number": cash_register_shifts_array[-1]["shift_number"] + 1,\
+        "opened":Time.get_datetime_dict_from_system(),\
         "closed":false,\
         "cash_on_open":cash_on_open,"cash_on_close":false,\
-        "money_actions":[]})
+        "money_actions":[]\
+        })
 
 
 func cash_file_max_256() -> void:
@@ -209,11 +218,13 @@ func cash_make_file(testing: bool = false) -> void:
     "datetime" = Time.get_datetime_dict_from_system(),\
     "money_action" = money_action,\
     "commentary" = "ПУСТАЯ ОПЛАТА (СОЗДАНИЕ НОВОЙ БАЗЫ СМЕН)"}]
-    var shift: Dictionary = \
-    {"opened":Time.get_datetime_dict_from_system(),\
+    var shift: Dictionary = {\
+    "shift_number": 600,\
+    "opened":Time.get_datetime_dict_from_system(),\
     "closed":Time.get_datetime_dict_from_system(),\
     "cash_on_open":0,"cash_on_close":0,\
-    "money_actions":money_actions_array}
+    "money_actions":money_actions_array\
+    }
     var base_array_of_shifts: Array = [shift]
     f.store_string(JSON.stringify(base_array_of_shifts, "\t"))
     f.close()
