@@ -209,18 +209,6 @@ func cash_load(testing: bool = false) -> void:
     f.close()
 
 
-#func cash_save() -> void:
-    #var f: FileAccess = FileAccess.open("user://CAPSULES/OTHER/CASH_REGISTER", FileAccess.WRITE)
-    #f.store_string(JSON.stringify(cash_register_shifts_array, "    "))
-    #f.close()
-#
-#
-#func cash_load() -> void:
-    #var f: FileAccess = FileAccess.open("user://CAPSULES/OTHER/CASH_REGISTER", FileAccess.READ)
-    #cash_register_shifts_array = JSON.parse_string(f.get_as_text())
-    #f.close()
-
-
 func cash_make_file(testing: bool = false) -> void:
     var f: FileAccess
     if !testing:
@@ -244,21 +232,6 @@ func cash_make_file(testing: bool = false) -> void:
     f.close()
 
 
-#func cash_make_file() -> void:
-    #var f: FileAccess = FileAccess.open("user://CAPSULES/OTHER/CASH_REGISTER", FileAccess.WRITE)
-    #var money_action: Dictionary = {"cash":0,"credit":0,"qr":0,"transfer":0}
-    #var money_actions_array: Array = [{\
-    #"datetime" = Time.get_datetime_dict_from_system(),\
-    #"money_action" = money_action,\
-    #"commentary" = "ПУСТАЯ ОПЛАТА (СОЗДАНИЕ НОВОЙ БАЗЫ СМЕН)"}]
-    #var shift: Dictionary = \
-    #{"opened":Time.get_datetime_dict_from_system(),\
-    #"closed":Time.get_datetime_dict_from_system(),\
-    #"cash_on_open":0,"cash_on_close":0,\
-    #"money_actions":money_actions_array}
-    #var base_array_of_shifts: Array = [shift]
-    #f.store_string(JSON.stringify(base_array_of_shifts, "\t"))
-    #f.close()
 #endregion
 
 
