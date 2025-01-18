@@ -130,6 +130,12 @@ func cash_test():
     cash_add_return(300,0,0,0,"returns_test1")
     print("print(cash_return_all_cash_returns_in_current_shift())")
     print(cash_return_all_cash_returns_in_current_shift())
+    print("print(cash_return_all_cash_returns_in_shift_number(610))")
+    print(cash_return_all_cash_returns_in_shift_number(610))
+    print("print(cash_return_all_cash_returns_in_shift_number(609))")
+    print(cash_return_all_cash_returns_in_shift_number(609))
+    print("print(cash_return_all_cash_returns_in_shift_number(601))")
+    print(cash_return_all_cash_returns_in_shift_number(601))
     cash_save(true)
     print("                        ---- cash debug end ----\n")
 
@@ -195,6 +201,17 @@ func cash_return_all_cash_money_actions_in_current_shift() -> Dictionary:
             datetimes.append(a["datetime"])
             comments.append(a["commentary"])
     return {"amounts" : amounts, "comments" : comments, "datetimes" : datetimes}
+
+
+func cash_return_all_cash_returns_in_shift_number(shift_number: int) -> Array:
+    var out: Array = []
+    var shift_index = cash_search_shifts_array_index_by_shift_number(shift_number)
+    if shift_index == 0:
+        return []
+    for money_action in cash_register_shifts_array[shift_index]["money_actions"]:
+        if money_action["money_action"]["cash"] < 0:
+            out.append(money_action)
+    return out
 
 
 func cash_return_all_cash_returns_in_current_shift() -> Array:
