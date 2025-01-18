@@ -118,17 +118,20 @@ func cash_test():
     print("cash_takeout(200,\"takeouts_test_1\")")
     cash_takeout(200,"takeouts_test_1")
     print("cash_takeout(100,\"takeouts_test_2\")")
-    cash_takeout(100,"takeouts_test_2")
     print("print(cash_return_takeouts_total_in_current_shift())")
     print(cash_return_takeouts_total_in_current_shift())
-    print("print(cash_search_shifts_array_index_by_shift_number(611))")
-    print(cash_search_shifts_array_index_by_shift_number(611))
     print("print(cash_search_shifts_array_index_by_shift_number(610))")
     print(cash_search_shifts_array_index_by_shift_number(610))
     print("print(cash_search_shifts_array_index_by_shift_number(609))")
     print(cash_search_shifts_array_index_by_shift_number(609))
+    print("cash_add_return(200,0,0,0,\"returns_test0\")")
+    cash_add_return(200,0,0,0,"returns_test0")
+    print("cash_add_return(200,0,0,0,\"returns_test1\")")
+    cash_add_return(300,0,0,0,"returns_test1")
+    print("print(cash_return_all_cash_returns_in_current_shift())")
+    print(cash_return_all_cash_returns_in_current_shift())
     cash_save(true)
-    print("                           ---- cash debug end ----\n")
+    print("                        ---- cash debug end ----\n")
 
 
 #endregion
@@ -192,6 +195,14 @@ func cash_return_all_cash_money_actions_in_current_shift() -> Dictionary:
             datetimes.append(a["datetime"])
             comments.append(a["commentary"])
     return {"amounts" : amounts, "comments" : comments, "datetimes" : datetimes}
+
+
+func cash_return_all_cash_returns_in_current_shift() -> Array:
+    var out: Array = []
+    for money_action in cash_register_shifts_array[-1]["money_actions"]:
+        if money_action["money_action"]["cash"] < 0:
+            out.append(money_action)
+    return out
 
 
 func cash_add_return(cash: int = 0,\
