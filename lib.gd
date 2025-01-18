@@ -45,8 +45,8 @@ var days_expired_to_break_exit_button: int = -6
 var days_expired_to_move_exit_button: int = -12
 
 var expiry_day: int = 1
-var expiry_month: int = 12
-var expiry_year: int = 2024
+var expiry_month: int = 3
+var expiry_year: int = 2025
 #endregion
 
 var random_checker_scores: Array[float] = []
@@ -60,26 +60,26 @@ var random_checker_scores: Array[float] = []
 #region ALL -> FUNCS -> TESTS
 
 
-func test_cash_register():
+func cash_test():
     print("\n                           ---- cash debug ----")
     cash_make_file(true)
     cash_load(true)
     cash_file_max_256()
-    print("current pre-close: ", cash_return_current_cash())
+    print("current pre-close: ", cash_return_current_register_cash())
     cash_close_shift()
-    print("current post-close: ", cash_return_current_cash())
+    print("current post-close: ", cash_return_current_register_cash())
     print("cash_return_shift_number() returns ", cash_return_shift_number())
-    print("current pre-open: ", cash_return_current_cash())
+    print("current pre-open: ", cash_return_current_register_cash())
     print("cash_shift_is_closed() returns ", cash_shift_is_open())
     cash_open_shift(100)
-    print("current post-open: ", cash_return_current_cash())
+    print("current post-open: ", cash_return_current_register_cash())
     print("cash_shift_is_closed() returns ", cash_shift_is_open())
-    print("current before +700: ", cash_return_current_cash())
+    print("current before +700: ", cash_return_current_register_cash())
     cash_add_payment(700,0,0,700,"ТЕСТ ОПЛАТЫ БЛЯДЬ")
-    print("current after +700: ", cash_return_current_cash())
-    print("curent before -700: ", cash_return_current_cash())
+    print("current after +700: ", cash_return_current_register_cash())
+    print("curent before -700: ", cash_return_current_register_cash())
     cash_add_return(700,0,0,700,"ТЕСТ ВОЗВРАТА БЛЯДЬ")
-    print("curent after -700: ", cash_return_current_cash())
+    print("curent after -700: ", cash_return_current_register_cash())
     print("cash_return_shift_number() before cash_set_shift_number(610) returns ", cash_return_shift_number())
     cash_set_shift_number(610)
     print("cash_return_shift_number() after cash_set_shift_number(610) returns ", cash_return_shift_number())
@@ -88,12 +88,45 @@ func test_cash_register():
     cash_return_all_cash_money_actions_in_current_shift())
     print("cash_return_all_money_actions_in_current_shift()\n",\
     cash_return_all_money_actions_in_current_shift())
-    
+    print()
+    print("cash_takeout(150, \"ТЕСТОВОЕ ИЗЪЯТИЕ\")")
+    cash_takeout(150, "ТЕСТОВОЕ ИЗЪЯТИЕ")
+    print("print(cash_return_all_takeouts_in_current_shift())")
+    print(cash_return_all_takeouts_in_current_shift())
+    print("cash_takeout(150, \"ТЕСТОВОЕ ИЗЪЯТИЕ 2\")")
+    cash_takeout(300, "ТЕСТОВОЕ ИЗЪЯТИЕ 2")
+    print("print(cash_return_all_takeouts_in_current_shift())")
+    print(cash_return_all_takeouts_in_current_shift())
+    print()
     print("last payment: ",\
     cash_register_shifts_array[-1]["money_actions"][-1]["money_action"],\
     "\ncommentary: ",\
     cash_register_shifts_array[-1]["money_actions"][-1]["commentary"])
-    
+    print("                              ---- new shift ----\n")
+    print("cash_close_shift()")
+    cash_close_shift()
+    print("cash_open_shift(cash_return_current_register_cash())")
+    cash_open_shift(cash_return_current_register_cash())
+    print("print(cash_return_current_register_cash())")
+    print(cash_return_current_register_cash())
+    print("print(cash_return_shift_number())")
+    print(cash_return_shift_number())
+    print("cash_add_payment(1000,0,0,0,\"takeouts_test\")")
+    cash_add_payment(1000,0,0,0,"takeouts_test")
+    print("cash_takeout(150,\"takeouts_test_0\")")
+    cash_takeout(150,"takeouts_test_0")
+    print("cash_takeout(200,\"takeouts_test_1\")")
+    cash_takeout(200,"takeouts_test_1")
+    print("cash_takeout(100,\"takeouts_test_2\")")
+    cash_takeout(100,"takeouts_test_2")
+    print("print(cash_return_takeouts_total_in_current_shift())")
+    print(cash_return_takeouts_total_in_current_shift())
+    print("print(cash_search_shifts_array_index_by_shift_number(611))")
+    print(cash_search_shifts_array_index_by_shift_number(611))
+    print("print(cash_search_shifts_array_index_by_shift_number(610))")
+    print(cash_search_shifts_array_index_by_shift_number(610))
+    print("print(cash_search_shifts_array_index_by_shift_number(609))")
+    print(cash_search_shifts_array_index_by_shift_number(609))
     cash_save(true)
     print("                           ---- cash debug end ----\n")
 
@@ -102,6 +135,34 @@ func test_cash_register():
 
 
 #region ALL -> FUNCS -> CASH
+
+
+func cash_search_shifts_array_index_by_shift_number(shift_number: int) -> int:
+    var index: int = -1
+    while index >= (-cash_register_shifts_array.size()):
+        if cash_register_shifts_array[index]["shift_number"] == shift_number:
+            return index
+        index = index - 1
+    return 0
+
+
+func cash_return_takeouts_total_in_current_shift() -> int:
+    var total: int = 0
+    for takeout in cash_return_all_takeouts_in_current_shift():
+        total = total + takeout["amount"]
+    return total
+
+
+func cash_return_all_takeouts_in_current_shift() -> Array:
+    return cash_register_shifts_array[-1]["takeouts"]
+    
+
+func cash_takeout(amount: int, purpose: String) -> void:
+    cash_register_shifts_array[-1]["takeouts"].append({
+    "amount" = amount,
+    "purpose" = purpose,
+    "datetime" = Time.get_datetime_dict_from_system(),
+    })
 
 
 func cash_set_shift_number(num: int) -> void:
@@ -140,7 +201,7 @@ commentary: String = "ВОЗВРАТ БЕЗ КОММЕНТАРИЯ") -> void:
     cash_register_shifts_array[-1]["money_actions"][-1]["datetime"] =\
     Time.get_datetime_dict_from_system()
     cash_register_shifts_array[-1]["money_actions"][-1]["money_action"] =\
-    {"cash" = - cash, "credit" = - credit, "qr" = - qr, "transfer" = - transfer}
+    {"cash" = -cash, "credit" = -credit, "qr" = -qr, "transfer" = -transfer}
     cash_register_shifts_array[-1]["money_actions"][-1]["commentary"] =\
     commentary
     
@@ -161,11 +222,11 @@ commentary: String = "ОПЛАТА БЕЗ КОММЕНТАРИЯ") -> void:
 func cash_close_shift() -> void:
     if typeof(cash_register_shifts_array[-1]["closed"]) == TYPE_BOOL:
         cash_register_shifts_array[-1]["closed"] = Time.get_datetime_dict_from_system()
-        cash_register_shifts_array[-1]["cash_on_close"] = cash_return_current_cash()
+        cash_register_shifts_array[-1]["cash_on_close"] = cash_return_current_register_cash()
     
 
 
-func cash_return_current_cash() -> int:
+func cash_return_current_register_cash() -> int:
     var total: int = cash_register_shifts_array[-1]["cash_on_open"]
     for a: Dictionary in cash_register_shifts_array[-1]["money_actions"]:
         total = total + a["money_action"]["cash"]
@@ -179,7 +240,8 @@ func cash_open_shift(cash_on_open: int) -> void:
         "opened":Time.get_datetime_dict_from_system(),\
         "closed":false,\
         "cash_on_open":cash_on_open,"cash_on_close":false,\
-        "money_actions":[]\
+        "money_actions":[],
+        "takeouts":[]\
         })
 
 
@@ -225,7 +287,8 @@ func cash_make_file(testing: bool = false) -> void:
     "opened":Time.get_datetime_dict_from_system(),\
     "closed":Time.get_datetime_dict_from_system(),\
     "cash_on_open":0,"cash_on_close":0,\
-    "money_actions":money_actions_array\
+    "money_actions":money_actions_array,\
+    "takeouts": []
     }
     var base_array_of_shifts: Array = [shift]
     f.store_string(JSON.stringify(base_array_of_shifts, "\t"))
@@ -609,7 +672,7 @@ func _ready():
     loading_done = true
     new_payment_history_key("ПРОГРАММА ЗАПУЩЕНА")
     
-    test_cash_register()
+    cash_test()
 #endregion
     
 
