@@ -65,21 +65,21 @@ func cash_test():
     cash_make_file(true)
     cash_load(true)
     cash_file_max_256()
-    print("current pre-close: ", cash_return_current_register_cash())
+    print("current pre-close: ", cash_return_current_register_checksum())
     cash_close_shift()
-    print("current post-close: ", cash_return_current_register_cash())
+    print("current post-close: ", cash_return_current_register_checksum())
     print("cash_return_shift_number() returns ", cash_return_shift_number())
-    print("current pre-open: ", cash_return_current_register_cash())
+    print("current pre-open: ", cash_return_current_register_checksum())
     print("cash_shift_is_closed() returns ", cash_shift_is_open())
     cash_open_shift(100)
-    print("current post-open: ", cash_return_current_register_cash())
+    print("current post-open: ", cash_return_current_register_checksum())
     print("cash_shift_is_closed() returns ", cash_shift_is_open())
-    print("current before +700: ", cash_return_current_register_cash())
+    print("current before +700: ", cash_return_current_register_checksum())
     cash_add_payment(700,0,0,700,"ТЕСТ ОПЛАТЫ БЛЯДЬ")
-    print("current after +700: ", cash_return_current_register_cash())
-    print("curent before -700: ", cash_return_current_register_cash())
+    print("current after +700: ", cash_return_current_register_checksum())
+    print("curent before -700: ", cash_return_current_register_checksum())
     cash_add_return(700,0,0,700,"ТЕСТ ВОЗВРАТА БЛЯДЬ")
-    print("curent after -700: ", cash_return_current_register_cash())
+    print("curent after -700: ", cash_return_current_register_checksum())
     print("cash_return_shift_number() before cash_set_shift_number(610) returns ", cash_return_shift_number())
     cash_set_shift_number(610)
     print("cash_return_shift_number() after cash_set_shift_number(610) returns ", cash_return_shift_number())
@@ -106,9 +106,9 @@ func cash_test():
     print("cash_close_shift()")
     cash_close_shift()
     print("cash_open_shift(cash_return_current_register_cash())")
-    cash_open_shift(cash_return_current_register_cash())
+    cash_open_shift(cash_return_current_register_checksum())
     print("print(cash_return_current_register_cash())")
-    print(cash_return_current_register_cash())
+    print(cash_return_current_register_checksum())
     print("print(cash_return_shift_number())")
     print(cash_return_shift_number())
     print("cash_add_payment(1000,0,0,0,\"takeouts_test\")")
@@ -171,7 +171,6 @@ func cash_return_all_takeouts_in_shift_number(shift_number: int) -> Array:
         return []
     return cash_register_shifts_array[shift_index]["takeouts"]
     
-
 
 func cash_return_all_takeouts_in_current_shift() -> Array:
     return cash_register_shifts_array[-1]["takeouts"]
@@ -286,11 +285,11 @@ commentary: String = "ОПЛАТА БЕЗ КОММЕНТАРИЯ") -> void:
 func cash_close_shift() -> void:
     if typeof(cash_register_shifts_array[-1]["closed"]) == TYPE_BOOL:
         cash_register_shifts_array[-1]["closed"] = Time.get_datetime_dict_from_system()
-        cash_register_shifts_array[-1]["cash_on_close"] = cash_return_current_register_cash()
+        cash_register_shifts_array[-1]["cash_on_close"] = cash_return_current_register_checksum()
     
 
 
-func cash_return_current_register_cash() -> int:
+func cash_return_current_register_checksum() -> int:
     var total: int = cash_register_shifts_array[-1]["cash_on_open"]
     for a: Dictionary in cash_register_shifts_array[-1]["money_actions"]:
         total = total + a["money_action"]["cash"]
