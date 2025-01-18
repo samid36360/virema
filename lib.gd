@@ -117,7 +117,6 @@ func cash_test():
     cash_takeout(150,"takeouts_test_0")
     print("cash_takeout(200,\"takeouts_test_1\")")
     cash_takeout(200,"takeouts_test_1")
-    print("cash_takeout(100,\"takeouts_test_2\")")
     print("print(cash_return_takeouts_total_in_current_shift())")
     print(cash_return_takeouts_total_in_current_shift())
     print("print(cash_search_shifts_array_index_by_shift_number(610))")
@@ -138,6 +137,8 @@ func cash_test():
     print(cash_return_all_cash_returns_in_shift_number(601))
     print("print(cash_return_all_returns_in_shift_number(610))")
     print(cash_return_all_returns_in_shift_number(610))
+    print("print(cash_return_all_takeouts_in_shift_number(611))")
+    print(cash_return_all_takeouts_in_shift_number(611))
     cash_save(true)
     print("                        ---- cash debug end ----\n")
 
@@ -162,6 +163,14 @@ func cash_return_takeouts_total_in_current_shift() -> int:
     for takeout in cash_return_all_takeouts_in_current_shift():
         total = total + takeout["amount"]
     return total
+
+
+func cash_return_all_takeouts_in_shift_number(shift_number: int) -> Array:
+    var shift_index = cash_search_shifts_array_index_by_shift_number(shift_number)
+    if shift_index == 0:
+        return []
+    return cash_register_shifts_array[shift_index]["takeouts"]
+    
 
 
 func cash_return_all_takeouts_in_current_shift() -> Array:
