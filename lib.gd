@@ -768,7 +768,7 @@ func _ready():
     loading_done = true
     new_payment_history_key("ПРОГРАММА ЗАПУЩЕНА")
     
-    cash_test()
+    #cash_test()
 #endregion
     
 
