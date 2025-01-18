@@ -143,6 +143,23 @@ func cash_test():
     print(cash_return_takeouts_total_in_shift_number(601))
     print("print(cash_return_takeouts_total_in_shift_number(611))")
     print(cash_return_takeouts_total_in_shift_number(611))
+    print("                              ---- new shift ----")
+    print("cash_close_shift()")
+    cash_close_shift()
+    print("cash_open_shift(cash_return_current_factual_checksum())")
+    cash_open_shift(cash_return_current_factual_checksum())
+    print("print(cash_return_current_factual_checksum())")
+    print(cash_return_current_factual_checksum())
+    print("print(cash_return_current_register_checksum())")
+    print(cash_return_current_register_checksum())
+    print("cash_takeout(50,\"test\")")
+    cash_takeout(50,"test")
+    print("print(cash_return_current_factual_checksum())")
+    print(cash_return_current_factual_checksum())
+    print("print(cash_return_current_register_checksum())")
+    print(cash_return_current_register_checksum())
+    cash_takeout(50,"test")
+    print("")
     cash_save(true)
     print("                        ---- cash debug end ----\n")
 
@@ -151,6 +168,10 @@ func cash_test():
 
 
 #region ALL -> FUNCS -> CASH
+
+
+func cash_return_current_factual_checksum() -> int:
+    return cash_return_current_register_checksum() - cash_return_takeouts_total_in_current_shift()
 
 
 func cash_search_shifts_array_index_by_shift_number(shift_number: int) -> int:
