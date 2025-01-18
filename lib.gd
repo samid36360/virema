@@ -139,6 +139,10 @@ func cash_test():
     print(cash_return_all_returns_in_shift_number(610))
     print("print(cash_return_all_takeouts_in_shift_number(611))")
     print(cash_return_all_takeouts_in_shift_number(611))
+    print("print(cash_return_takeouts_total_in_shift_number(601))")
+    print(cash_return_takeouts_total_in_shift_number(601))
+    print("print(cash_return_takeouts_total_in_shift_number(611))")
+    print(cash_return_takeouts_total_in_shift_number(611))
     cash_save(true)
     print("                        ---- cash debug end ----\n")
 
@@ -156,6 +160,14 @@ func cash_search_shifts_array_index_by_shift_number(shift_number: int) -> int:
             return index
         index = index - 1
     return 0
+
+
+func cash_return_takeouts_total_in_shift_number(shift_number: int) -> int:
+    var total: int = 0
+    for takeout in cash_return_all_takeouts_in_shift_number(shift_number):
+        total = total + takeout["amount"]
+    return total
+    
 
 
 func cash_return_takeouts_total_in_current_shift() -> int:
